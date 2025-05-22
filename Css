@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>User Preferences with Animation</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 30px;
+    background-color: #f8f9fa;
+    color: #333;
+  }
+  .container {
+    max-width: 400px;
+    margin: auto;
+    text-align: center;
+  }
+  label {
+    display: block;
+    margin: 15px 0 5px;
+    font-weight: bold;
+  }
+  select {
+    padding: 8px;
+    font-size: 16px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+  }
+  button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  button:hover {
+    background: #0056b3;
+  }
+  #animated-box {
+    width: 100px;
+    height: 100px;
+    background-color: #28a745;
+    margin: 30px auto 0 auto;
+    border-radius: 12px;
+  }
+  /* CSS Animation */
+  @keyframes bounce {
+    0%   { transform: translateY(0); }
+    50%  { transform: translateY(-40px); }
+    100% { transform: translateY(0); }
+  }
+  .bounce {
+    animation: bounce 0.6s ease;
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <h1>User Preferences</h1>
+    <label for="color-select">Choose your favorite color:</label>
+    <select id="color-select" aria-label="Favorite Color">
+      <option value="green">Green</option>
+      <option value="blue">Blue</option>
+      <option value="orange">Orange</option>
+      <option value="purple">Purple</option>
+    </select>
+    <button id="save-preference-btn">Save Preference & Animate</button>
+    <div id="animated-box" aria-live="polite" aria-atomic="true"></div>
+  </div>
+
+  <script>
+    // Function to store preference in localStorage
+    function savePreference(color) {
+      localStorage.setItem('favoriteColor', color);
+    }
+
+    // Function to retrieve preference from localStorage
+    function getPreference() {
+      return localStorage.getItem('favoriteColor');
+    }
+
+    // Function to apply color preference to the animated box
+    function applyPreference(color) {
+      const box = document.getElementById('animated-box');
+      box.style.backgroundColor = color;
+    }
+
+    // Function to trigger animation by adding/removing the CSS class
+    function triggerAnimation() {
+      const box = document.getElementById('animated-box');
+      box.classList.remove('bounce'); // reset animation
+      // Force reflow to restart animation
+      void box.offsetWidth;
+      box.classList.add('bounce');
+    }
+
+    // On page load: get stored preference, if exists, and set color
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedColor = getPreference();
+      if(savedColor) {
+        document.getElementById('color-select').value = savedColor;
+        applyPreference(savedColor);
+      }
+    });
+
+    // Button click event: save preference and animate box
+    document.getElementById('save-preference-btn').addEventListener('click', () => {
+      const selectedColor = document.getElementById('color-select').value;
+      savePreference(selectedColor);
+      applyPreference(selectedColor);
+      triggerAnimation();
+    });
+  </script>
+</body>
+</html>
+
